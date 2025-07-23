@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+ 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+    depends_on:
+      - zipkin
+
+
+  service-b:
+    build:
+      context: .
+      dockerfile: Dockerfile.service-b
+    container_name: go-clima-service-b
+    volumes:
+      - ./.env:/root/.env
+    ports:
+      - "8081:8081"
+    environment:
+      - NOME_SERVICO=clima-service-b
+      - HTTP_PORTA=8081
+      - HTTP_HOST=0.0.0.0
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - ZIPKIN_URL=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - zipkin
+      - otel-collector
+
+
+  service-a:
+    build:
+      context: .
+      dockerfile: Dockerfile.service-a
+    container_name: go-clima-service-a
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.env:/root/.env
+    environment:
+      - NOME_SERVICO=clima-service-a
+      - HTTP_PORTA=8080
+      - HTTP_HOST=0.0.0.0
+      - SERVICE_B_URL=http://service-b:8081
+      - ZIPKIN_URL=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - service-b

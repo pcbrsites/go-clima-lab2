@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "debug service A",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/cmd/service-a/main.go",
+      "env": {},
+      "args": [],
+      "cwd": "${workspaceFolder}/cmd/service-a",
+      "showLog": true
+    },
+    {
+      "name": "debug service B",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/cmd/service-b/main.go",
+      "env": {},
+      "args": [],
+      "cwd": "${workspaceFolder}/cmd/service-b",
+      "showLog": true
+    }
+  ]
+}
