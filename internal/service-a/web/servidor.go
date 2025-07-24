@@ -40,6 +40,7 @@ func (s *Servidor) Start() {
 	r.Use(otelgin.Middleware("service-a"))
 
 	r.POST("/", s.handleValidarCEP)
+	r.POST("/cep", s.handleValidarCEP)
 
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {

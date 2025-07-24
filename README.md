@@ -34,13 +34,42 @@ Para executar o projeto, utilize o seguinte comando:
 
 ```bash
 docker-compose up --build
+# ou
+docker compose up --build
 ```
 
-Isso irá construir a imagem do Docker e iniciar o serviço da API na porta 8080.
+Isso irá construir a imagem do Docker e iniciar o serviço da API na porta http://localhost:8080
+
+# Verifique se o docker-compose está online
+
+```bash
+docker-compose ps
+# ou
+docker compose ps
+```
 
 ## Testando a API
 
 Utilize o arquivo cep.http dentro da pasta `api/` para testar a API.
+
+ou
+
+```bash
+curl --request POST \
+  --url http://localhost:8080/ \
+  --header 'content-type: application/json' \
+  --data '{"cep": "29902555"}'
+
+```
+
+ou
+
+```bash
+curl --request POST \
+  --url http://localhost:8080/cep \
+  --header 'content-type: application/json' \
+  --data '{"cep": "29902555"}'
+```
 
 ## portas
 
